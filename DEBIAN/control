@@ -1,0 +1,10 @@
+Package: wificar
+Version: 0.1
+Description: Wi-Fi Car.
+Section: electronics
+Priority: optional
+Maintainer: Yihui Xiong <yihui.xiong@seeed.cc>
+License: MIT
+Architecture: i586
+Depends: libmraa0 (>= 0.5.4)
+Source: https://github.com/Seeed-Studio/edison-wificar

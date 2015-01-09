@@ -1,0 +1,11 @@
+[Unit]
+Description=Wi-Fi Car
+After=network.target
+
+[Service]
+ExecStart=python /usr/share/wificar/car_httpd.py
+Restart=always
+RestartSec=3s
+
+[Install]
+WantedBy=multi-user.target
