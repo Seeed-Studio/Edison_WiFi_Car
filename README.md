@@ -25,17 +25,17 @@ cd {REPO_DIR}
 ```
 Connect to the Edison WiFi network and open 192.168.42.1 in your web browser.
 
-### Generate an ipk
-`dpkg-deb` is used to generate an ipk. Just run `release.sh`, wificar.ipk will be generated.
+### Create an ipk
+Just run `make`, wificar.ipk will be created.
 ```
 cd {REPO_DIR}
-./release.sh
+make
 ```
 Then copy wificar.ipk to Edison and run:
 ```
 opkg install wificar.ipk
-systemctl start wificar.service   # to start wificar
-systemctl enable wificar.service  # to autorun wificar at startup
+systemctl start wificar.service   # start wificar
+systemctl enable wificar.service  # autorun wificar at startup
 ```
 
 ----
