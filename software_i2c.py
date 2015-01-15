@@ -38,14 +38,14 @@ class SoftwareI2c():
                 self.sda.write(1)
             else:
                 self.sda.write(0)
-                
+
+            self.clock()
             self.scl.write(1)
             self.clock()
             d <<= 1
             self.scl.write(0)
-            self.clock()
-        
-        # TO DO: read ACK/NACK
+
+        # TO DO: read ACK/NACK, it takes too long to switch IO from output to input on Edison
         self.sda.write(0)
         self.clock()
         self.scl.write(1)
@@ -55,22 +55,6 @@ class SoftwareI2c():
     def beginTransmission(self, addr):
         self.start()
         self.write(addr<<1)
-
-    def clean_io(self):
-        self.scl.write(1)
-        self.sda.write(1)
-        
-    def recover(self):
-        self.sda.dir(mraa.DIR_IN)
-        if not self.sda.read():
-            for i in range(8):
-                self.scl.write(0)
-                self.clock()
-                self.scl.write(1)
-                self.clock()
- 
-        self.sda.dir(mraa.DIR_OUT)
-        
         
     def clock(self):
         time.sleep(0.000001)
