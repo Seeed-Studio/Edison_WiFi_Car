@@ -27,20 +27,10 @@ class Motor():
     def setSpeed(self, a, b):
         speed = ((a & 0xff) << 8) + (b & 0xff)
         self.i2c.writeWordReg(self.CMD_SET_SPEED, speed)
-        
-        time.sleep(0.0001)
-        
-        # commands need be send twice
-        self.i2c.writeWordReg(self.CMD_SET_SPEED, speed)
 
     def setDirection(self, dir):
         direction = (dir << 8) + self.DUMMY;
         self.i2c.writeWordReg(self.CMD_SET_DIR, direction)
-        
-        time.sleep(0.0001)
-        
-        self.i2c.writeWordReg(self.CMD_SET_DIR, direction)
-        
 
 if __name__== '__main__':
     import time
