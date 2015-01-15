@@ -4,35 +4,40 @@
 import mraa
 import time
 
-class SoftwareI2c():
+class I2c():
 
     def __init__(self, scl_pin, sda_pin):
-        self.sda = mraa.Gpio(sda_pin)
         self.scl = mraa.Gpio(scl_pin)
+        self.sda = mraa.Gpio(sda_pin)
 
-        # TO DO: check i2c bus error
+        line = self.check()
+        if line != 2:
+            print('Warning! SCL or SDA (%d) is pulled down , I2C bus may go wrong.' % line)
+            # raise Exception('I2C bus goes wrong, please reset I2C Motor Driver')
 
-        self.sda.dir(mraa.DIR_OUT)
         self.scl.dir(mraa.DIR_OUT)
-        self.sda.write(1)
+        self.sda.dir(mraa.DIR_OUT)
         self.scl.write(1)
+        self.sda.write(1)
+
+        self.addr = 0
 
     def start(self):
-        self.sda.write(1)
         self.scl.write(1)
+        self.sda.write(1)
         self.clock()
         self.sda.write(0)
         self.clock()
         self.scl.write(0)
-        self.clock()
 
     def stop(self):
-        self.sda.write(1)
         self.clock()
         self.scl.write(1)
         self.clock()
+        self.sda.write(1)
+        self.clock()
 
-    def write(self, d):
+    def raw(self, d):
         for i in range(8):
             if (d&0x80 == 0x80):
                 self.sda.write(1)
@@ -52,30 +57,43 @@ class SoftwareI2c():
         self.clock()
         self.scl.write(0)
 
-    def beginTransmission(self, addr):
-        self.start()
-        self.write(addr<<1)
-        
+    def check(self):
+        self.scl.dir(mraa.DIR_IN)
+        self.sda.dir(mraa.DIR_IN)
+        line = (self.scl.read() << 1) + self.sda.read()
+
+        return line
+
     def clock(self):
         time.sleep(0.000001)
 
-if __name__=="__main__":
-    i2c = SoftwareI2c(8,9)
+    def address(self, addr):
+        self.addr = addr << 1
 
-    while(True):
-        # set speed
-        i2c.beginTransmission(0xff)
-        i2c.write(0x82)
-        i2c.write(0xff)
-        i2c.write(0xff)
-        i2c.stop()
-        i2c.stop()
+    def writeReg(self, reg, data):
+        self.start()
+        self.raw(self.addr)
+        self.raw(reg)
+        self.raw(data)
+        self.stop()
 
-        # set direction
-        i2c.beginTransmission(0xff)
-        i2c.write(0xAA)
-        i2c.write(0b1010)
-        i2c.write(0x01)
-        i2c.stop()
+    def writeWordReg(self, reg, data):
+        self.start()
+        self.raw(self.addr)
+        self.raw(reg)
+        self.raw(data >> 8)
+        self.raw(data & 0xff)
+        self.stop()
 
-        time.sleep(0.0005)
+    def writeByte(self, data):
+        self.start()
+        self.raw(self.addr)
+        self.raw(data)
+        self.stop()
+
+    def write(self, bytes):
+        self.start()
+        self.raw(self.addr)
+        for byte in bytes:
+            self.raw(byte)
+        self.stop()

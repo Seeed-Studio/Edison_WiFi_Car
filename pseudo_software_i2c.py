@@ -3,19 +3,14 @@ do nothing, for debug
 '''
 
 
-class SoftwareI2c():
+class I2c():
 
     def __init__(self, scl, sda):
         pass
-        
-    def start(self):
+
+    def address(self, addr):
         pass
 
-    def stop(self):
+    def writeWordReg(self, reg, data):
         pass
 
-    def write(self, d):
-        pass
-
-    def beginTransmission(self, addr):
-        pass

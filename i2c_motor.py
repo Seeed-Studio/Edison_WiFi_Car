@@ -3,9 +3,9 @@
 
 try:
     import mraa
-    from  software_i2c import *
+    from  software_i2c import I2c
 except ImportError:
-    from pseudo_software_i2c import *
+    from pseudo_software_i2c import I2c
 
 import time
 
@@ -18,41 +18,28 @@ class Motor():
     DUMMY = 0x01
     CMD_ENABLE_STEPPER = 0x1a
     CMD_DISABLE_STEPPER = 0x1b
-    I2C_ADDRESS=0x0f
+    I2C_ADDRESS = 0x0f
 
     def __init__(self, scl, sda):
-        self.i2c=SoftwareI2c(scl, sda)
+        self.i2c = I2c(scl, sda)
+        self.i2c.address(self.I2C_ADDRESS)
 
     def setSpeed(self, a, b):
-        self.i2c.beginTransmission(self.I2C_ADDRESS)
-        self.i2c.write(self.CMD_SET_SPEED);
-        self.i2c.write(a);
-        self.i2c.write(b);
-        self.i2c.stop();
+        speed = ((a & 0xff) << 8) + (b & 0xff)
+        self.i2c.writeWordReg(self.CMD_SET_SPEED, speed)
         
         time.sleep(0.0001)
         
         # commands need be send twice
-        self.i2c.beginTransmission(self.I2C_ADDRESS)
-        self.i2c.write(self.CMD_SET_SPEED);
-        self.i2c.write(a);
-        self.i2c.write(b);
-        self.i2c.stop();
+        self.i2c.writeWordReg(self.CMD_SET_SPEED, speed)
 
     def setDirection(self, dir):
-        self.i2c.beginTransmission(self.I2C_ADDRESS)
-        self.i2c.write(self.CMD_SET_DIR);
-        self.i2c.write(dir);
-        self.i2c.write(self.DUMMY)
-        self.i2c.stop();
+        direction = (dir << 8) + self.DUMMY;
+        self.i2c.writeWordReg(self.CMD_SET_DIR, direction)
         
         time.sleep(0.0001)
         
-        self.i2c.beginTransmission(self.I2C_ADDRESS)
-        self.i2c.write(self.CMD_SET_DIR);
-        self.i2c.write(dir);
-        self.i2c.write(self.DUMMY)
-        self.i2c.stop();
+        self.i2c.writeWordReg(self.CMD_SET_DIR, direction)
         
 
 if __name__== '__main__':
