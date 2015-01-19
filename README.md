@@ -3,15 +3,15 @@ Edison WiFi Car
 
 To build WiFi Car with Intel Edison and Seeed Skeleton Bot.
 
-![](www/img/car.jpg)
+![](www/img/car_top_view.jpg)
 
 ## Hardware
-+ Intel Edison + Arduino Breakout
++ Intel Edison + Edison Arduino Breakout
 + [Skeleton Bot](http://www.seeedstudio.com/wiki/Skeleton_Bot_-_4WD_hercules_mobile_robotic_platform)
 + [Grove - I2C Motor Driver](http://www.seeedstudio.com/wiki/Grove_-_I2C_Motor_Driver_V1.3)
 + [Base Shield](http://www.seeedstudio.com/wiki/index.php?title=Base_shield_v2&uselang=en)
 
-Connect the Grove - I2C Motor Driver to Base Shield's D8 Grove connector.
+Connect the Grove - I2C Motor Driver to Base Shield's A0 Grove connector (A0 - SCL, A1 - SDA).
 
 ## Software
 ### Requirements
@@ -27,16 +27,16 @@ Connect to the Edison WiFi network and open 192.168.42.1 in your web browser.
 
 ### Create an ipk
 Just run `make`, wificar.ipk will be created.
-```
-cd {REPO_DIR}
-make
-```
 Then copy wificar.ipk to Edison and run:
 ```
 opkg install wificar.ipk
 systemctl start wificar.service   # start wificar
 systemctl enable wificar.service  # autorun wificar at startup
 ```
+
+## To Do
+- [ ] Communication protocol uses WebSocket to replace HTTP GET
+- [ ] Add Camera
 
 ----
 
