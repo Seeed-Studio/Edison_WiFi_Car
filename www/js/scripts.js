@@ -1,3 +1,38 @@
+websocket_url = "ws://localhost:8001/";
+
+function doConnect()
+{
+    websocket = new WebSocket(websocket_url);
+    websocket.onopen = function(evt) { onOpen(evt) };
+    websocket.onclose = function(evt) { onClose(evt) };
+    websocket.onmessage = function(evt) { onMessage(evt) };
+    websocket.onerror = function(evt) { onError(evt) };
+}
+
+function onOpen(evt)
+{
+    
+}
+
+function onClose(evt)
+{
+
+}
+
+function onMessage(evt)
+{
+}
+
+function onError(evt)
+{
+    websocket.close();
+}
+
+function doSend(message)
+{
+    websocket.send(message);
+}
+
 
 function forward()
 {
@@ -23,6 +58,8 @@ function backward()
 var keyPressed = false;
 function init()
 {
+    doConnect();
+
     if (document.addEventListener) {
         document.addEventListener("keydown", keydown, false);
         document.addEventListener("keyup", keyup, false);
@@ -99,8 +136,5 @@ function keypress(e)
 
 function send(s)
 {
-    var url = "car.control?action=" + s;
-    xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", url, true);
-    xmlHttp.send();
+    doSend(s)
 }
