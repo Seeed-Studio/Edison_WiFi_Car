@@ -1,3 +1,11 @@
+.img-responsive {
+    display: block; height: auto; max-width: 100%;
+}
+
 .borderless tbody tr td {
     border: none;
+}
+
+button {
+    font-family: monospace;
 }
