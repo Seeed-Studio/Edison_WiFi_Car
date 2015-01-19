@@ -57,7 +57,7 @@ class Car():
 
     def run(self):
         print('car thread is running')
-        self.motor = Motor(8, 9)
+        self.motor = Motor(14, 15)
         while not self.exit.isSet():
             self.event.wait()
             self.event.clear()
